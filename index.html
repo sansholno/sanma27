@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="robots" content="noindex" />
+        <title>さんまタイプ診断</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --cream: #FDF1DC;
+        --blue: #1F7BB8;
+        --green: #3E9A66;
+        --pink: #F8C8DC;
+        --pink-light: #FDE6EF;
+        --ink: #1F3A5F;
+    }
+
+    body {
+        font-family: 'M PLUS Rounded 1c';
+        margin: 0;
+        padding: 24px 0 64px;
+        background: var(--green);
+        color: var(--ink);
+        line-height: 1.7;
+    }
+
+    #personalityTestForm,
+    #resultArea {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    /* 質問カード */
+   #personalityTestForm .question {
+    margin: 0 0 20px;
+    padding: 8px 18px 18px;
+    background: var(--cream);
+    border-radius: 20px;
+}
+
+    #personalityTestForm .question p {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 16px 0 12px 0 !important;
+        color: var(--blue);
+    }
+
+    #personalityTestForm .question p.error-message {
+        font-size: 14px;
+        margin: 4px 0 0 0 !important;
+    }
+
+    /* 選択肢 */
+    #personalityTestForm .question input[type="radio"] {
+        opacity: 0;
+        position: absolute;
+    }
+
+    #personalityTestForm .question label {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 0 8px 0;
+        padding: 12px 14px;     
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1.6;
+        background-color: #fff;
+        color: var(--ink);
+        transition: all 0.2s;
+    }
+
+    #personalityTestForm .question label:hover {
+        background-color: var(--pink-light);
+    }
+
+    #personalityTestForm .question input:checked + label {
+        background-color: var(--pink);
+        font-weight: bold;
+    }
+
+    /* ボタン */
+    #personalityTestForm button {
+        display: block;
+        width: 100%;
+        margin: 32px auto 0;
+        padding: 14px;
+        border: none;
+        border-radius: 999px;
+        background: var(--pink);
+        color: var(--blue);
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    #personalityTestForm button:hover {
+        background: var(--pink);
+        color: var(--ink);
+    }
+
+    /* 結果 */
+    #resultArea h2 {
+        text-align: center;
+        color: var(--cream);
+        font-size: 24px;
+    }
+
+    .result-box {
+        max-width: 420px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 24px;       
+        background: var(--cream);
+        box-sizing: border-box;
+        border: 18px solid var(--pink);
+        border-radius: 42px;
+    }
+
+    .result-box img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .result-box h3 {
+        margin:8 0 0 0px;
+        color: var(--blue);   
+    }
+
+    .result-box .result-text {
+        margin: 0;
+        color: var(--ink);
+        font-size: 16px;
+    }
+
+    .result-bestname {
+        font-size: 56px;
+    }
+
+    .share-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 28px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: inherit;
+    font-weight: bold;
+    text-decoration: none;
+}
+.share-button:hover {
+    background: var(--blue);
+}
+
+.site-header {
+    max-width: 480px;
+    margin: 0 auto 24px;
+    padding: 0 16px;
+    text-align: center;
+}
+.site-header img {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+}
+</style>
+
+    
+    </head>
+
+    <body>
+        <header class="site-header">
+    <img src="images/logo.png" alt="さんま27タイプ診断">
+</header>
+        <form id="personalityTestForm">
+    <!-- 質問リスト -->
+    <div class="question">
+        <p>Q1. 友達が何か悩んでいるみたい。どうする?</p>
+        <input type="radio" id="q1_a" name="q1" data-s1="1" data-s6="-1">
+        <label for="q1_a">声をかけて、解決案をどんどん出す</label>
+
+        <input type="radio" id="q1_b" name="q1" data-s1="1">
+        <label for="q1_b">そばにいて話を聞く</label>
+
+        <input type="radio" id="q1_c" name="q1" data-s1="-1">
+        <label for="q1_c">相手が話したくなるまで待つ</label>
+
+        <input type="radio" id="q1_d" name="q1" data-s6="2" data-s5="1">
+        <label for="q1_d">自分のことのように一緒に落ち込む</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q2. 休み時間はどう過ごすことが多い?</p>
+        <input type="radio" id="q2_a" name="q2" data-s1="2">
+        <label for="q2_a">教室の真ん中でみんなと話す</label>
+
+        <input type="radio" id="q2_b" name="q2" data-s1="1">
+        <label for="q2_b">仲のいい数人とゆっくり話す</label>
+
+        <input type="radio" id="q2_c" name="q2" data-s1="-2">
+        <label for="q2_c">1人で読書など好きなことをする</label>
+
+        <input type="radio" id="q2_d" name="q2" data-s6="1">
+        <label for="q2_d">その日の気分でころころ変わる</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q3. 宿題が終わらず困っています。どうする?</p>
+        <input type="radio" id="q3_a" name="q3" data-s2="2">
+        <label for="q3_a">すぐに誰かに頼る </label>
+
+        <input type="radio" id="q3_b" name="q3" data-s2="1">
+        <label for="q3_b"> 少し自分でやって、わからないところだけ聞く</label>
+
+        <input type="radio" id="q3_c" name="q3" data-s2="-1">
+        <label for="q3_c">最後まで一人で頑張る</label>
+
+        <input type="radio" id="q3_d" name="q3" data-s2="-2" data-s4="-1">
+        <label for="q3_d">困っていることを誰にも言えず諦める</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q4. 家事や勉強など、やるべきことがある日に友達に遊びに誘われた。どうする</p>
+        <input type="radio" id="q4_a" name="q4" data-s3="-2">
+        <label for="q4_a">楽しそうなので遊びに行く</label>
+
+        <input type="radio" id="q4_b" name="q4" data-s3="-1">
+        <label for="q4_b">少し考えて、あとで後悔しない方を選ぶ</label>
+
+        <input type="radio" id="q4_c" name="q4" data-s3="1">
+        <label for="q4_c">友達や家族が困らないよう調整する</label>
+
+        <input type="radio" id="q4_d" name="q4" data-s3="2">
+        <label for="q4_d">先に用事を終わらせてから決める</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q5. 人前でほめられた！</p>
+        <input type="radio" id="q5_a" name="q5" data-s4="2">
+        <label for="q5_a">素直に喜ぶ</label>
+
+        <input type="radio" id="q5_b" name="q5" data-s4="-1">
+        <label for="q5_b">うれしくても「別に」とごまかす</label>
+
+        <input type="radio" id="q5_c" name="q5" data-s4="-2">
+        <label for="q5_c">相手の反応を気にして謙遜する</label>
+
+        <input type="radio" id="q5_d" name="q5" data-s4="-1" data-s5="-1">
+        <label for="q5_d">内心得意げだけど、顔には出さない</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q6. 自分よりも注目されている人がいると、どう感じる？</p>
+        <input type="radio" id="q6_a" name="q6" data-s5="2">
+        <label for="q6_a">素直に「すごいな」と思う</label>
+
+        <input type="radio" id="q6_b" name="q6" data-s6="1">
+        <label for="q6_b">少し悔しくて気持ちがざわつく</label>
+
+        <input type="radio" id="q6_c" name="q6" data-s5="-2">
+        <label for="q6_c">内心「自分の方が上」と思い、気にならない</label>
+
+        <input type="radio" id="q6_d" name="q6" data-s5="-2" data-s4="-1">
+        <label for="q6_d">表面上は仲良くするけど気に入らず、陰口を言いたくなる</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q7. 大きな失敗をしてしまった！誰かに話す?</p>
+        <input type="radio" id="q7_a" name="q7" data-s2="2">
+        <label for="q7_a">すぐに話して助けてもらう</label>
+
+        <input type="radio" id="q7_b" name="q7" data-s2="1">
+        <label for="q7_b">少し考えてから、信頼できる人にだけ話す</label>
+
+        <input type="radio" id="q7_c" name="q7" data-s2="-1">
+        <label for="q7_c">自分で何とかして、あとで報告する</label>
+
+        <input type="radio" id="q7_d" name="q7" data-s2="-2" data-s4="-1">
+        <label for="q7_d">誰にも言えず、1人で抱え込む</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q8. 楽しみにしていた予定が突然中止になったときの反応は？</p>
+        <input type="radio" id="q8_a" name="q8" data-s6="2">
+        <label for="q8_a">周りにもわかるくらい、すぐ顔や声に出る</label>
+
+        <input type="radio" id="q8_b" name="q8" data-s6="1">
+        <label for="q8_b">しばらくもやもやするけど切り替える</label>
+
+        <input type="radio" id="q8_c" name="q8" data-s6="-1">
+        <label for="q8_c">少し残念だけど、別の予定を考える</label>
+
+        <input type="radio" id="q8_d" name="q8" data-s6="-2">
+        <label for="q8_d">ほとんど気にならない</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q9. クラスの出し物をグループで決めることに。どう動く?</p>
+        <input type="radio" id="q9_a" name="q9" data-s3="-2">
+        <label for="q9_a">「面白そう」と思った案を押していく</label>
+
+        <input type="radio" id="q9_b" name="q9" data-s3="1" data-s5="1">
+        <label for="q9_b">全員が納得できる案を探す</label>
+
+        <input type="radio" id="q9_c" name="q9" data-s3="2">
+        <label for="q9_c">時間や条件に合う案を選ぶ</label>
+
+        <input type="radio" id="q9_d" name="q9" data-s3="1" data-s2="1">
+        <label for="q9_d">誰かが決めた案にそのまま乗る</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q10. 知らない人ばかりの集まりではどう動く？</p>
+        <input type="radio" id="q10_a" name="q10" data-s1="2">
+        <label for="q10_a">自分からいろんな人に話しかける</label>
+
+        <input type="radio" id="q10_b" name="q10" data-s1="1">
+        <label for="q10_b">近くの人と少しずつ話す</label>
+
+        <input type="radio" id="q10_c" name="q10" data-s1="-1">
+        <label for="q10_c">話しかけられるまで待つ</label>
+
+        <input type="radio" id="q10_d" name="q10" data-s1="-2">
+        <label for="q10_d">すみっこで静かに過ごし、早く帰りたいと思う</label>
+
+        <p class="error-message"></p>
+    </div>
+
+    <div class="question">
+        <p>Q11. あまり公にしていない趣味について聞かれた。どう答える?</p>
+        <input type="radio" id="q11_a" name="q11" data-s4="2">
+        <label for="q11_a">堂々と好きなことを話す</label>
+
+        <input type="radio" id="q11_b" name="q11" data-s4="1">
+        <label for="q11_b">相手を見て、話せそうなら話す</label>
+
+        <input type="radio" id="q11_c" name="q11" data-s4="-1">
+        <label for="q11_c">ごまかしてフェイクを話す</label>
+
+        <input type="radio" id="q11_d" name="q11" data-s4="-2">
+        <label for="q11_d">話さず、別の無難な話題にそらす</label>
+
+        <p class="error-message"></p>
+    </div>
+
+<div class="question">
+        <p>Q12. 苦手な人と同じグループになったらどうする？</p>
+        <input type="radio" id="q12_a" name="q12" data-s5="2">
+        <label for="q12_a">相手の良いところを探してみる</label>
+
+        <input type="radio" id="q12_b" name="q12" data-s5="1">
+        <label for="q12_b">普通に接する</label>
+
+        <input type="radio" id="q12_c" name="q12" data-s5="0">
+        <label for="q12_c">必要なとき以外は距離を置く</label>
+
+        <input type="radio" id="q12_d" name="q12" data-s5="-2" data-s4="-1">
+        <label for="q12_d">表では合わせるけど、内心見下す</label>
+
+        <p class="error-message"></p>
+    </div>
+
+<div class="question">
+        <p>Q13. 大事な試験や発表の前日はどんな気持ち？</p>
+        <input type="radio" id="q13_a" name="q13" data-s6="2">
+        <label for="q13_a">不安で泣きたくなったり眠れなくなる</label>
+
+        <input type="radio" id="q13_b" name="q13" data-s6="1">
+        <label for="q13_b">緊張するけど、夜はちゃんと眠れる</label>
+
+        <input type="radio" id="q13_c" name="q13" data-s6="-2" data-s3="-1">
+        <label for="q13_c">「なんとかなる」精神でいつもと変わらない</label>
+
+        <input type="radio" id="q13_d" name="q13" data-s6="-1" data-s3="1">
+        <label for="q13_d">準備を完ぺきに済ませ、落ち着いている</label>
+
+        <p class="error-message"></p>
+    </div>
+
+<div class="question">
+        <p>Q14. 知らない場所で道に迷ったらどうする?</p>
+        <input type="radio" id="q14_a" name="q14" data-s2="2">
+        <label for="q14_a">すぐに近くの人に聞く</label>
+
+        <input type="radio" id="q14_b" name="q14" data-s2="1">
+        <label for="q14_b">少し調べてみて、わからなければ聞く</label>
+
+        <input type="radio" id="q14_c" name="q14" data-s2="-1">
+        <label for="q14_c">地図やスマホを使って自分で解決する</label>
+
+        <input type="radio" id="q14_d" name="q14" data-s2="-2">
+        <label for="q14_d">自力でわからなくても誰にも聞けず彷徨う</label>
+
+        <p class="error-message"></p>
+    </div>    
+
+<div class="question">
+        <p>Q15. 2つの服で迷っているときの決め手は?</p>
+        <input type="radio" id="q15_a" name="q15" data-s3="-2">
+        <label for="q15_a">かわいい・好きと思った方</label>
+
+        <input type="radio" id="q15_b" name="q15" data-s3="-1">
+        <label for="q15_b">自分が納得できる方</label>
+
+        <input type="radio" id="q15_c" name="q15" data-s3="2" data-s4="-1">
+        <label for="q15_c">周りにどう見られるかで選ぶ</label>
+
+        <input type="radio" id="q15_d" name="q15" data-s3="2">
+        <label for="q15_d">予算や使う予定に合う方</label>
+
+        <p class="error-message"></p>
+    </div> 
+
+    <div class="question">
+        <p>Q16. 友達がルールを破っていたらどうする？</p>
+        <input type="radio" id="q16_a" name="q16" data-s3="2" data-s4="2">
+        <label for="q16_a">その場ではっきり指摘する</label>
+
+        <input type="radio" id="q16_b" name="q16" data-s3="1">
+        <label for="q16_b">2人のときにそっと伝える</label>
+
+        <input type="radio" id="q16_c" name="q16" data-s3="-1" data-s4="-1">
+        <label for="q16_c">気にはなるけど、見なかったことにする</label>
+
+        <input type="radio" id="q16_d" name="q16" data-s3="-2">
+        <label for="q16_d">自分には関係ない</label>
+
+        <p class="error-message"></p>
+    </div> 
+
+    <div class="question">
+        <p>Q17. 何も予定がない休日はどう過ごす?</p>
+        <input type="radio" id="q17_a" name="q17" data-s1="2">
+        <label for="q17_a">友達を誘って大勢で遊ぶ</label>
+
+        <input type="radio" id="q17_b" name="q17" data-s1="1">
+        <label for="q17_b">仲のいい1〜2人とのんびり過ごす</label>
+
+        <input type="radio" id="q17_c" name="q17" data-s1="-2">
+        <label for="q17_c">家で1人で好きなことをする</label>
+
+        <input type="radio" id="q17_d" name="q17" data-s6="1">
+        <label for="q17_d">朝起きたときの気分で決める</label>
+
+        <p class="error-message"></p>
+    </div> 
+
+    <div class="question">
+        <p>Q18. 落ち込んでいるときはどうする?</p>
+        <input type="radio" id="q18_a" name="q18" data-s2="2" data-s4="2">
+        <label for="q18_a">すぐに友達に泣きつき、一緒に考えてもらう</label>
+
+        <input type="radio" id="q18_b" name="q18" data-s2="1" data-s1="1">
+        <label for="q18_b">友達にそばにいてもらって、くっついて過ごす</label>
+
+        <input type="radio" id="q18_c" name="q18" data-s2="-1">
+        <label for="q18_c">1人で気持ちを整理して立ち直る</label>
+
+        <input type="radio" id="q18_d" name="q18" data-s2="-2" data-s4="-2">
+        <label for="q18_d">落ち込んでいることを隠し、いつも通りに振る舞う</label>
+
+        <p class="error-message"></p>
+    </div> 
+
+    <button type="button" onclick="calculateResult()">診断する</button>
+</form>
+
+<section id="resultArea">
+
+    <h2>診断結果</h2>
+
+    <div class="resultText"></div>
+
+</section>
+
+
+<script>
+    const characters = [
+  { name: '綴 絢子', reading: 'つづり あやこ', image: 'images/tsuzuri.PNG', text: `好きな自分を堂々と貫く"魔性の女" `, s: [ 2,  2,  1,  2,  2, -1] },
+  { name: '柏木 紫杏', reading: 'かしわぎ しあん', image: 'images/kashiwagi.PNG', text: `情に流されない孤高の一匹狼`, s: [-2,  0, -2,  1, -1, -2] },
+  { name: '李 美雨', reading: 'り めいゆ', image: 'images/ri.PNG', text: `気ままで面倒くさがりなナルシスト`, s: [-1, -2, -2, -1, -2,  1] },
+  { name: '北村 ゆい', reading: 'きたむら ゆい', image: 'images/kitamura.png', text: `やわらかさに包まれた合理主義`, s: [ 1,  1,  2,  0,  1, -1] },
+  { name: '氷見野 雫李', reading: 'ひみの しずり', image: 'images/himino.PNG', text: `シャイな読書家<br>実はがんばりやさん`, s: [-2, -1,  1,  1,  1, -1] },
+  { name: '夢 紗花', reading: 'ゆめ さやか', image: 'images/yume.PNG', text: `喜怒哀楽まっすぐ<br>曲がったことは見逃せない優等生`, s: [ 1,  1,  2,  2,  2,  2] },
+  { name: '斉藤 直哉', reading: 'さいとう なおや', image: 'images/saitou.PNG', text: `社交的なリーダータイプ<br>プライドが高く二面性がある`, s: [ 2,  0,  2, -2, -2,  2] },
+  { name: '佐久間 春陽', reading: 'さくま はるひ', image: 'images/sakuma.PNG', text: `可愛いと楽しいで<br>心がいっぱいな癒し系`, s: [ 2,  2, -2,  2,  2, -1] },
+  { name: '南條 愛理', reading: 'なんじょう あいり', image: 'images/nanjo.PNG', text: `明るく世話好き<br>ちょっと気分屋で不安定`, s: [ 2,  1, -2, -1,  0,  2] },
+  { name: '広川 麻依', reading: 'ひろかわ まい', image: 'images/hirokawa.PNG', text: `理想に苦しむまじめな夢想家`, s: [-1, -2,  1, -2,  1,  0] },
+  { name: '小宮 裕', reading: 'こみや ゆう', image: 'images/komiya.PNG', text: `スリルを楽しむ自由奔放な頭脳派`, s: [ 1, -1, -2, -1, -1, -1] },
+  { name: '相楽 天音', reading: 'さがら あまね', image: 'images/sagara', text: `周囲への感謝を忘れない<br>ポジティブなムードメーカー`, s: [ 2,  2,  0, -1,  2, -1] },
+  { name: '似鳥 椛', reading: 'にとり かえで', image: 'images/nitori.PNG', text: `まっさらで何にだってなれる<br>のんびり屋の天才肌`, s: [ 0,  2,  1,  2,  1, -2] },
+  { name: '白石 海空', reading: 'しらいし みそら', image: 'images/shiraishi.PNG', text: `ひたむきに努力し<br>夢を歌う理想主義者`, s: [ 1,  1, -1,  2,  1,  0] },
+  { name: '須藤 真子', reading: 'すどう まこ', image: 'images/sudou.PNG', text: `天然フレネミー気質なあざと女子`, s: [ 1,  2, -2, -1, -2,  1] },
+  { name: '市川 日和', reading: 'いちかわ ひより', image: 'images/ichikawa.PNG', text: `友達思いで芯の強いギャル`, s: [ 2,  1, -1,  2,  2, -2] },
+  { name: '東海林 龍馬', reading: 'しょうじ りょうま', image: 'images/shoji.PNG', text: `自然体で心優しい食いしん坊`, s: [ 1,  2,  0,  2,  2, -2] },
+  { name: '相田 日七海', reading: 'あいだ ひなみ', image: 'images/aida.PNG', text: `気配り上手な平和主義<br>すこし臆病で八方美人`, s: [-1, -2,  2, -2, -2,  1] },
+  { name: '木梨 みる', reading: 'きなし みる', image: 'images/kinashi.PNG', text: `推しのためならどこまでも！愛とエネルギーで全力疾走`, s: [ 2, -1, -2,  2,  2,  0] },
+  { name: '美作 俊人', reading: 'みまさか しゅんと', image: 'images/mimasaka.PNG', text: `仲間の前では背伸びしがち<br>素直になれない冷笑オタク`, s: [ 0,  1,  1, -1, -2,  1] },
+  { name: '喜寄 杏寿', reading: 'きよせ あんじゅ', image: 'images/kiyose.PNG', text: `マイペースで人懐っこい自由人`, s: [ 2,  1, -2,  2,  2, -2] },
+  { name: '紀伊 國矢', reading: 'きの くにや', image: 'images/kino.PNG', text: `エネルギー溢れる<br>博愛主義なマエストロ`, s: [ 2,  0,  0,  2,  2, -2] },
+  { name: '栞田 初夏', reading: 'しおた ういか', image: 'images/shiota.PNG', text: `にぎやかなのが大好き！<br>好きも嫌いもハッキリ自分色`, s: [ 2,  1, -2,  2,  0,  0] },
+  { name: '鎧塚 清友', reading: 'よろいづか せいと', image: 'images/yoroizuka.PNG', text: `目標は高く<br>文武両道な自信家`, s: [ 1, -1,  1,  2,  0, -2] },
+  { name: '空知 告', reading: 'そらち つぐ', image: 'images/sorachi.PNG', text: `明るく元気でフレンドリー<br>ちょっと繊細`, s: [ 2,  1,  1,  1,  2,  2] },
+  { name: '高村 道夫', reading: 'たかむら みちお', image: 'images/takamura.PNG', text: `好きなものの話は止まらない！<br>物静かな博士`, s: [-2, -1, -2,  1,  1, -1] },
+  { name: '大原 大吾', reading: 'おおはら だいご', image: 'images/oohara.PNG', text: `明るくてお人よし<br>皆のムードメーカー`, s: [ 2,  1,  2,  2,  2, -2] }
+];
+
+   function calculateResult() {
+    const form = document.getElementById('personalityTestForm');
+    const scores = [0, 0, 0, 0, 0, 0];
+    let allAnswered = true;
+    const questions = form.querySelectorAll('.question');
+
+    questions.forEach((question, index) => {
+        const selectedAnswer = question.querySelector(`input[name="q${index + 1}"]:checked`);
+        const errorMessage = question.querySelector('.error-message');
+
+        if (!selectedAnswer) {
+            errorMessage.textContent = '選択してね！';
+            errorMessage.style.color = 'red';
+            allAnswered = false;
+        } else {
+            errorMessage.textContent = '';
+            for (let i = 0; i < 6; i++) {
+                scores[i] += Number(selectedAnswer.dataset['s' + (i + 1)] || 0);
+            }
+        }
+    });
+
+    if (!allAnswered) {
+        return;
+    }
+
+        // 各項目の最小値と最大値を求める
+    const minScores = [0, 0, 0, 0, 0, 0];
+    const maxScores = [0, 0, 0, 0, 0, 0];
+    questions.forEach((question) => {
+        for (let i = 0; i < 6; i++) {
+            let qMin = Infinity;
+            let qMax = -Infinity;
+            question.querySelectorAll('input[type="radio"]').forEach((input) => {
+                const v = Number(input.dataset['s' + (i + 1)] || 0);
+                if (v < qMin) qMin = v;
+                if (v > qMax) qMax = v;
+            });
+            minScores[i] += qMin;
+            maxScores[i] += qMax;
+        }
+    });
+
+    // 合計を-2〜+2の範囲に直す
+    const normalized = scores.map((score, i) => {
+        const range = maxScores[i] - minScores[i];
+        if (range === 0) return 0;
+        return ((score - minScores[i]) / range) * 4 - 2;
+    });
+    console.log(normalized.join(', '));
+
+    // いちばん近いキャラを探す
+    let best = null;
+    let bestDistance = Infinity;
+    characters.forEach((ch) => {
+        let distance = 0;
+        for (let i = 0; i < 6; i++) {
+            distance += Math.abs(normalized[i] - ch.s[i]);
+        }
+        if (distance < bestDistance) {
+            bestDistance = distance;
+            best = ch;
+        }
+    });
+
+        // Xシェア用リンク
+    const shareText = `私は${best.name}タイプでした！ #さんま27タイプ診断`;
+    const pageUrl = location.href.split(/[?#]/)[0];
+    const shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(pageUrl);
+
+            // 結果を画面に出す
+    document.querySelector('.resultText').innerHTML = `
+        <div class="result-box">
+            <h3>あなたは<br><span class="result-bestname">${best.name}</span></h3>
+           <img src="${best.image || 'images/dummy2.png'}" alt="${best.name}">
+            
+            <p class="result-text">${best.text}</p>
+            <a class="share-button" href="${shareUrl}" target="_blank" rel="noopener">Xで結果をシェア</a>
+        </div>
+    `;
+    document.getElementById('resultArea').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+</script>
+    </body>
+</html>
